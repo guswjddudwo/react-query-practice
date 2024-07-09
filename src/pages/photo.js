@@ -1,14 +1,26 @@
 import { useEffect, useState } from "react";
+import { getAllPhoto } from "../apis/photo";
 
 export default function Photo() {
   const [photo, setPhoto] = useState([]);
 
   useEffect(() => {
     const setAsyncPhoto = async () => {
-      const results = await setAsyncPhoto();
-      console.log(results);
-      setAsyncPhoto(results.data);
+      const results = await getAllPhoto();
+      setPhoto(results.data);
+      console.log(results.data);
     };
+    setAsyncPhoto();
   }, []);
-  return <>photo</>;
+
+  return (
+    <div>
+      <ul>
+        {photo.map((photo, index) => {
+          <li key={index}>{photo.title}</li>;
+        })}
+      </ul>
+      photo
+    </div>
+  );
 }

@@ -7,10 +7,19 @@ export default function Post() {
   useEffect(() => {
     const setAsyncPost = async () => {
       const results = await getAllPost();
-      console.log(results);
-      setPost(results.data);
+      console.log(results.data);
     };
     setAsyncPost();
   }, []);
-  return <>post</>;
+
+  return (
+    <div>
+      <ul>
+        {post.map((post, index) => (
+          <li key={index}>{post.title}</li>
+        ))}
+      </ul>
+      post
+    </div>
+  );
 }
