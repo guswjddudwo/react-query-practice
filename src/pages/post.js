@@ -7,7 +7,7 @@ export default function Post() {
   useEffect(() => {
     const setAsyncPost = async () => {
       const results = await getAllPost();
-      console.log(results.data);
+      setPost(results.data);
     };
     setAsyncPost();
   }, []);

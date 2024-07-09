@@ -8,7 +8,6 @@ export default function Photo() {
     const setAsyncPhoto = async () => {
       const results = await getAllPhoto();
       setPhoto(results.data);
-      console.log(results.data);
     };
     setAsyncPhoto();
   }, []);
@@ -16,9 +15,9 @@ export default function Photo() {
   return (
     <div>
       <ul>
-        {photo.map((photo, index) => {
-          <li key={index}>{photo.title}</li>;
-        })}
+        {photo.map((photo, index) => (
+          <li key={index}>{photo.title}</li>
+        ))}
       </ul>
       photo
     </div>
