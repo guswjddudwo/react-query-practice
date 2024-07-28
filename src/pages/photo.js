@@ -1,54 +1,42 @@
 import { useEffect, useState } from "react";
 import { getAllPhoto, getPhoto } from "../apis/photo";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import "./photo.css";
 
 export default function Photo() {
-  const [showDialog, setShowDialog] = useState({
-    id: null,
-    show: false,
-  });
-  const [photo, setPhoto] = useState([]);
-
-  const { data: photos = [] } = useQuery({
-    queryKey: ["photo"],
+  const { data: photos, fetchNextPage } = useInfiniteQuery({
+    queryKey: ["photos"],
     queryFn: getAllPhoto,
-    select: (data) => data.data,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPage, lastPageParam) => {
+      if (lastPage.length == 0) {
+        return undefined;
+      }
+      return lastPageParam + 1;
+    },
+    select: (data) => {
+      return data.pages.flatMap((photo) => photo.data);
+    },
   });
+  console.log(photos);
 
-  // console.log(data);
-
-  const handleClickDialog = (id) => {
-    setShowDialog({
-      id,
-      show: true,
-    });
-  };
-
-  const handleClickHideDialog = () => {
-    setShowDialog({
-      id: null,
-      show: false,
-    });
-  };
   return (
     <div>
       <ul className="list">
-        {photos.map((photo) => (
-          <li
-            role="button"
-            key={photo.id}
-            className="list-item"
-            onClick={() => handleClickDialog(photo.id)}
-          >
-            <h1>{photo.title}</h1>
-            <p>{photo.body}</p>
-          </li>
-        ))}
+        {photos.map((photo) => {
+          return (
+            <li key={photo.id} role="button" className="list-item">
+              <h1>{photo.title}</h1>
+              <p>{photo.url}</p>
+            </li>
+          );
+        })}
       </ul>
-      {showDialog.show && (
+      <button onClick={fetchNextPage}>next page</button>
+
+      {/* {showDialog.show && (
         <AlertDialog id={showDialog.id} onClose={handleClickHideDialog} />
-      )}
+      )} */}
     </div>
   );
 }
